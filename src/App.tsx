@@ -30,7 +30,7 @@ function App() {
 
   return (
     <>
-      <input type="file" title="upload preview image" accept="image/*" onChange={handleChangedFile} ref={fileInputRef}/>
+      {!previewimageSrc && <input type="file" title="upload preview image" accept="image/*" onChange={handleChangedFile} ref={fileInputRef}/>}
       {previewimageSrc && <ImagePreview imageSrc={previewimageSrc} onClose={handleClose}/>}
     </>
   );
