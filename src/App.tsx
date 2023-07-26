@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { ChangeEventHandler, useState } from "react";
+import ImagePreview from "./ImagePreview";
 
 const fileToData = (file: File) => {
   return new Promise<string>((resolve, reject) => {
@@ -17,14 +18,15 @@ function App() {
     const file = e.target.files?.[0];
     if(!file) return;
     const filename = await fileToData(file);
-    console.log(`filename is ${filename}`);
     setPreviewImageSrc(filename);
   }
 
+  const handleClose = () => setPreviewImageSrc(undefined);
+
   return (
     <>
-      <img src={previewimageSrc} alt="image preview"/>
-      <input type="file" title="upload preview image" onChange={handleChangedFile}/>
+      <input type="file" title="upload preview image" accept="image/*" onChange={handleChangedFile}/>
+      {previewimageSrc && <ImagePreview imageSrc={previewimageSrc} onClose={handleClose}/>}
     </>
   );
 }
