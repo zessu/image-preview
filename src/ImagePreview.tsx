@@ -1,9 +1,13 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import styled from '@emotion/styled'
 
 const Container = styled.div `
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+  height: 100vh;
+  border: 1px solid blue;
+  background-color: #333;
 `
 
 const ImageSection = styled.div`
@@ -57,22 +61,33 @@ function ImagePreview({ imageSrc, onClose }: Props) {
   const resetScale = () => {
     setScale(1);
   }
-
-  const originalHeight = imageRef.current?.naturalHeight ?? 0;
-  const originalWidth = imageRef.current?.naturalWidth ?? 0;
-
-  const scaledDimensions = {
-    width: scale * originalWidth,
-    height: scale * originalHeight
+  
+  const cleanUp = () => {
+    onClose();
   }
+
+  useEffect(() => {
+    const imageHeight = imageRef.current?.naturalHeight ?? 0;
+    const imageWidth = imageRef.current?.naturalWidth ?? 0;
+
+    const scaledDimensions = {
+      width: scale * imageWidth,
+      height: scale * imageHeight
+    }
+
+    if (imageRef.current) {
+      imageRef.current.style.width = `${scaledDimensions.width}px`;
+      imageRef.current.style.height = `${scaledDimensions.height}px`;
+    }
+  }, [imageSrc, scale]);
 
   return (
     <Container>
       <TopBar>
-        <ControlButton onClick={onClose}>X</ControlButton>
+        <ControlButton onClick={cleanUp}>X</ControlButton>
       </TopBar>
       <ImageSection>
-        <img src={imageSrc} alt="user laoded image" ref={imageRef} style={scaledDimensions}/>
+        <img src={imageSrc} alt="user loaded image" ref={imageRef}/>
       </ImageSection>
       <BottomBar>
         <ControlButton onClick={zoomOut}>-</ControlButton>
